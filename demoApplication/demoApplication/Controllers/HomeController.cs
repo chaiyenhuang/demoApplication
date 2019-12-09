@@ -10,9 +10,14 @@ namespace demoApplication.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly BookKeepingService bookKeeping;
+
+        public HomeController()
+        {
+            bookKeeping = new BookKeepingService();
+        }
         public ActionResult Index()
         {
-            BookKeepingService bookKeeping = new BookKeepingService();
 
             List<TrackViewModel> trackView = bookKeeping.GetTrackdata().ToList();
 

@@ -1,33 +1,45 @@
-﻿using SkillTreeHomework.Models.ViewModels;
+﻿using Dapper;
+using SkillTreeHomework.Models.ViewModels;
 using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
-using System.Web;
+using System.Configuration;
+using demoApplication.Models;
 
 namespace SkillTreeHomework.Service
 {
     public class BookKeepingService
     {
+        private readonly SqlConnection conn;
+
+        public BookKeepingService()
+        {
+            conn = new SqlConnection(ConfigurationManager.ConnectionStrings["SkillTreeHomeworkEntities"].ToString());
+        }
         public IEnumerable<TrackViewModel> GetTrackdata()
         {
-            var tracklist = new List<TrackViewModel>();
-            int num = 0;
-            //塞假資料100筆
-            for (int i = 0; i < 100; i++)
+            List<AccountBook> queryresults = null;
+            using (conn)
             {
-                //隨機數字
-                num = new Random(Guid.NewGuid().GetHashCode()).Next(1,9999) + i;
+                string strSql = "Select * from AccountBook";
+                queryresults = conn.Query<AccountBook>(strSql).ToList();
+            }
+
+            var tracklist = new List<TrackViewModel>();
+            //塞資料
+            for (int i = 0; i < queryresults.Count; i++)
+            {
                 TrackViewModel result = new TrackViewModel
                 {
-                    Category = (CategoryType)(num % 2),
-                    Amount = num,
-                    Date = DateTime.Now.AddDays(i)
+                    Category = (CategoryType)(queryresults[i].Categoryyy),
+                    Amount = queryresults[i].Amounttt,
+                    Date = queryresults[i].Dateee
                 };
 
                 //資料丟進List
                 tracklist.Add(result);
             }
-
 
             return tracklist;
         }
