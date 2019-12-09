@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SkillTreeHomework.Models.ViewModels;
+using SkillTreeHomework.Service;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -10,7 +12,11 @@ namespace demoApplication.Controllers
     {
         public ActionResult Index()
         {
-            return View();
+            BookKeepingService bookKeeping = new BookKeepingService();
+
+            List<TrackViewModel> trackView = bookKeeping.GetTrackdata().ToList();
+
+            return View(trackView);
         }
 
         public ActionResult About()
